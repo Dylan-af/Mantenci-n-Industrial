@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 class Empresa(models.Model):
@@ -49,6 +50,7 @@ class Equipo(models.Model):
     fecha_adquisicion = models.DateField(blank=True, null=True)
     fecha_instalacion = models.DateField(blank=True, null=True)
     fecha_ultimo_mantenimiento = models.DateField(blank=True, null=True)
+    critical = models.BooleanField(default=False, help_text="Indica si es equipo crítico")
     activo = models.BooleanField(default=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
@@ -86,6 +88,7 @@ class Tecnico(models.Model):
     )
     certificaciones = models.TextField(blank=True, null=True)
     empresas = models.ManyToManyField(Empresa, related_name='tecnicos', blank=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='tecnico')
     activo = models.BooleanField(default=True)
     fecha_contratacion = models.DateField(blank=True, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -129,6 +132,7 @@ class Plan(models.Model):
     descripcion = models.TextField(blank=True, null=True)
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default='preventivo')
     frecuencia = models.CharField(max_length=20, choices=FRECUENCIA_CHOICES)
+    frequency_days = models.IntegerField(default=30, help_text="Frecuencia en días")
     duracion_estimada_horas = models.DecimalField(
         max_digits=5,
         decimal_places=2,
