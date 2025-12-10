@@ -1,544 +1,375 @@
-# Mantención Industrial - Sistema de Gestión de Mantenimiento
+# 🔧 Mantención Industrial - Sistema de Gestión
 
-Sistema completo de API REST para gestionar mantenimiento industrial con soporte para empresas, equipos, técnicos, planes de mantenimiento y órdenes de trabajo.
+Sistema completo de API REST para demostrar gestión integral de mantenimiento industrial. Incluye empresas, equipos, técnicos, planes de mantenimiento y órdenes de trabajo.
 
-## 📋 Tabla de Contenidos
+## ⚡ Inicio Rápido 
 
-- [Características](#características)
-- [Requisitos](#requisitos)
-- [Instalación](#instalación)
-- [Configuración](#configuración)
-- [Uso](#uso)
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [API Documentation](#api-documentation)
-- [Autenticación y Permisos](#autenticación-y-permisos)
-- [Desarrollo](#desarrollo)
-
-## ✨ Características
-
-- ✅ **Gestión de Empresas**: Registro y administración de clientes
-- ✅ **Gestión de Equipos**: Control de activos con historial de mantenimiento
-- ✅ **Gestión de Técnicos**: Personal técnico con especialidades
-- ✅ **Planes de Mantenimiento**: Preventivo, correctivo y predictivo
-- ✅ **Órdenes de Trabajo**: Creación, seguimiento y control de trabajos
-- ✅ **API REST Completa**: Endpoints documentados para integración
-- ✅ **Autenticación**: Sistema de permisos IsAuthenticatedOrReadOnly
-- ✅ **Paginación y Filtrado**: Búsqueda avanzada en todos los recursos
-- ✅ **Estadísticas**: Reportes de empresas y equipos
-- ✅ **Admin Django**: Panel administrativo completo
-
-## 📦 Requisitos
-
-- **Python**: 3.8+
-- **pip**: Gestor de paquetes de Python
-- **Git**: Control de versiones (opcional)
-
-### Paquetes Principales
-
-- Django 6.0
-- Django REST Framework 3.16.1
-- coreapi 2.3.3
-
-## 🚀 Instalación
-
-### 1. Clonar el Repositorio
-
+### 1. Activar Ambiente Virtual
 ```bash
-git clone https://github.com/Dylan-af/Mantenci-n-Industrial.git
-cd Mantenci-n-Industrial
-```
-
-### 2. Crear Ambiente Virtual
-
-**Windows (PowerShell):**
-```powershell
-python -m venv venv
+# Windows
 .\venv\Scripts\Activate.ps1
-```
 
-**Windows (CMD):**
-```cmd
-python -m venv venv
-venv\Scripts\activate.bat
-```
-
-**Linux/Mac:**
-```bash
-python3 -m venv venv
+# Linux/Mac
 source venv/bin/activate
 ```
 
-### 3. Instalar Dependencias
-
-```bash
-pip install -r requirements.txt
-```
-
-O instalar manualmente:
-```bash
-pip install Django==6.0
-pip install djangorestframework==3.16.1
-pip install coreapi==2.3.3
-```
-
-### 4. Aplicar Migraciones
-
-```bash
-python manage.py migrate
-```
-
-Salida esperada:
-```
-Operations to perform:
-  Apply all migrations: admin, auth, contenttypes, mantenimiento, sessions
-Running migrations:
-  Applying mantenimiento.0001_initial... OK
-  Applying auth.0001_initial... OK
-  ...
-```
-
-### 5. Crear Superusuario
-
-```bash
-python manage.py createsuperuser
-```
-
-Ingrese:
-- Username: `admin`
-- Email: `admin@example.com`
-- Password: (elija una contraseña segura)
-
-### 6. Ejecutar Servidor de Desarrollo
-
+### 2. Correr el Servidor
 ```bash
 python manage.py runserver
 ```
 
-La API estará disponible en: `http://127.0.0.1:8000/`
+### 3. Acceder a la Aplicación
+- **API REST**: http://127.0.0.1:8000/api/
+- **Panel Admin**: http://127.0.0.1:8000/admin/
+  - Usuario: `admin`
+  - Contraseña: `admin`
 
-## ⚙️ Configuración
+## 📦 Qué Se Incluye
 
-### Cambiar Zona Horaria
+### 🏢 Módulo de Empresas
+Gestiona clientes/empresas con toda su información:
+- Nombre, RUT, email, teléfono
+- Dirección, ciudad, contacto principal
+- Equipos, planes y órdenes asociadas
+- Estadísticas en tiempo real
 
-En `config/settings.py`:
-```python
-TIME_ZONE = 'America/Santiago'  # Para Chile
-# o
-TIME_ZONE = 'UTC'  # Para UTC
-```
-
-### Cambiar Idioma
-
-En `config/settings.py`:
-```python
-LANGUAGE_CODE = 'es-es'  # Español
-# o
-LANGUAGE_CODE = 'en-us'  # Inglés
-```
-
-### Configuración de Base de Datos
-
-**SQLite (Defecto - Desarrollo):**
-Ya está configurada en `config/settings.py`
-
-**PostgreSQL (Producción):**
-```bash
-pip install psycopg2-binary
-```
-
-En `config/settings.py`:
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mantenccion_db',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+**Ejemplo de respuesta:**
+```json
+{
+  "id": 1,
+  "nombre": "Minería ABC",
+  "rut": "78.123.456-7",
+  "email": "contacto@mineria.cl",
+  "ciudad": "Antofagasta",
+  "total_equipos": 5,
+  "total_ordenes": 23
 }
 ```
 
-### Configuración de CORS (Opcional)
+### ⚙️ Módulo de Equipos
+Control de activos industriales:
+- Especificaciones técnicas (marca, modelo, serie)
+- Estado operativo (operativo, mantenimiento, etc.)
+- Historial de mantenimiento
+- Campo crítico para equipos de importancia alta
+- Ubicación y datos de adquisición
 
-Para permitir peticiones desde diferentes dominios:
-
-```bash
-pip install django-cors-headers
+**Ejemplo:**
+```json
+{
+  "id": 1,
+  "nombre": "Compresor Industrial",
+  "codigo": "EQ-001",
+  "tipo": "Compresor",
+  "marca": "Atlas Copco",
+  "estado": "operativo",
+  "critical": true,
+  "fecha_ultimo_mantenimiento": "2025-11-20"
+}
 ```
 
-En `config/settings.py`:
-```python
-INSTALLED_APPS = [
-    ...
-    'corsheaders',
-]
+### 👨‍🔧 Módulo de Técnicos
+Personal técnico especializado:
+- Datos personales y profesionales
+- Especialidades (mecánico, eléctrico, etc.)
+- Años de experiencia
+- Usuario del sistema para login directo
+- Asignación a empresas específicas
 
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    ...
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+**Ejemplo:**
+```json
+{
+  "id": 1,
+  "nombre": "Juan",
+  "apellido": "García",
+  "especialidad": "mecanico",
+  "experiencia_anos": 8,
+  "user": 2
+}
 ```
 
-## 📖 Uso
+### 📋 Módulo de Planes
+Planes de mantenimiento configurables:
+- Tipos: Preventivo, Correctivo, Predictivo
+- Frecuencias: Diaria, Semanal, Mensual, Trimestral, etc.
+- **Nuevo**: Frecuencia en días para cálculos automáticos
+- Tareas, herramientas y repuestos
+- Costos estimados
+- Técnicos recomendados
 
-### Acceder al Panel Admin
-
-1. Ejecutar servidor: `python manage.py runserver`
-2. Ir a: `http://127.0.0.1:8000/admin/`
-3. Loguear con superusuario
-4. Crear empresas, equipos, técnicos, planes y órdenes
-
-### Usar la API
-
-**Listar todas las empresas:**
-```bash
-curl -X GET http://127.0.0.1:8000/api/empresas/
+**Ejemplo:**
+```json
+{
+  "id": 1,
+  "nombre": "Mantenimiento Mensual",
+  "tipo": "preventivo",
+  "frecuencia": "mensual",
+  "frequency_days": 30,
+  "duracion_estimada_horas": 2.5,
+  "costo_estimado": 150000
+}
 ```
 
-**Crear una nueva empresa (requiere autenticación):**
+### 📍 Módulo de Órdenes
+Órdenes de trabajo con seguimiento completo:
+- Numeración automática (ORD-2025-00001)
+- Estados: Programada, En Progreso, Completada, etc.
+- Prioridades: Baja, Media, Alta, Urgente
+- Asignación de técnicos
+- Seguimiento de tiempo y costos reales
+
+**Estados de una orden:**
+```
+Programada → En Progreso → Completada
+                    ↓
+                 Pausada → En Progreso → Completada
+                    ↓
+                Cancelada (fin)
+```
+
+### Crear una Empresa
 ```bash
 curl -X POST http://127.0.0.1:8000/api/empresas/ \
   -H "Content-Type: application/json" \
   -d '{
-    "nombre": "Empresa ABC",
-    "rut": "12345678-9",
-    "email": "contacto@empresa.cl"
+    "nombre": "TechMining Ltd",
+    "rut": "99.999.999-9",
+    "email": "info@techmining.cl",
+    "ciudad": "Santiago"
   }' \
-  -u admin:password
+  -u admin:admin
 ```
 
-**Ver detalles de una empresa:**
+### Crear un Equipo
 ```bash
-curl -X GET http://127.0.0.1:8000/api/empresas/1/
+curl -X POST http://127.0.0.1:8000/api/equipos/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "empresa": 1,
+    "nombre": "Bomba Centrífuga HP-500",
+    "codigo": "EQ-001",
+    "tipo": "Bomba",
+    "marca": "Grundfos",
+    "critical": true,
+    "estado": "operativo"
+  }' \
+  -u admin:admin
 ```
 
-**Obtener estadísticas de una empresa:**
+### Crear un Técnico con Usuario
 ```bash
-curl -X GET http://127.0.0.1:8000/api/empresas/1/estadisticas/
+curl -X POST http://127.0.0.1:8000/api/tecnicos/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Carlos",
+    "apellido": "Rodríguez",
+    "rut": "18.456.789-2",
+    "email": "carlos@tecnico.cl",
+    "telefono": "+56912345678",
+    "especialidad": "mecanico",
+    "experiencia_anos": 10
+  }' \
+  -u admin:admin
 ```
 
-**Filtrar equipos operativos:**
+### Crear un Plan de Mantenimiento
 ```bash
-curl -X GET http://127.0.0.1:8000/api/equipos/operativos/
+curl -X POST http://127.0.0.1:8000/api/planes/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "empresa": 1,
+    "equipo": 1,
+    "nombre": "Mantenimiento Trimestral - Bomba",
+    "tipo": "preventivo",
+    "frecuencia": "trimestral",
+    "frequency_days": 90,
+    "duracion_estimada_horas": 3.5,
+    "tareas": "Inspección completa, cambio de aceite, revisión de sellos",
+    "fecha_inicio": "2025-12-01"
+  }' \
+  -u admin:admin
 ```
 
-**Listar órdenes pendientes:**
+### Crear una Orden de Trabajo
 ```bash
-curl -X GET http://127.0.0.1:8000/api/ordenes/pendientes/
+curl -X POST http://127.0.0.1:8000/api/ordenes/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "empresa": 1,
+    "equipo": 1,
+    "plan": 1,
+    "tecnico_asignado": 1,
+    "descripcion": "Mantenimiento preventivo programado",
+    "estado": "programada",
+    "prioridad": "media",
+    "fecha_programada": "2025-12-15T10:00:00Z"
+  }' \
+  -u admin:admin
 ```
 
-**Iniciar una orden:**
+### Iniciar una Orden
 ```bash
-curl -X POST http://127.0.0.1:8000/api/ordenes/5/iniciar/ \
-  -u admin:password
+curl -X POST http://127.0.0.1:8000/api/ordenes/1/iniciar/ -u admin:admin
 ```
+
+### Completar una Orden
+```bash
+curl -X POST http://127.0.0.1:8000/api/ordenes/1/completar/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "horas_trabajadas": 3.25,
+    "costo_real": 145000,
+    "observaciones": "Todo en orden"
+  }' \
+  -u admin:admin
+```
+
+## 📊 Endpoints Principales
+
+| Recurso | GET | POST | PUT | DELETE |
+|---------|-----|------|-----|--------|
+| `/api/empresas/` | ✅ | ✅ | ✅ | ✅ |
+| `/api/equipos/` | ✅ | ✅ | ✅ | ✅ |
+| `/api/tecnicos/` | ✅ | ✅ | ✅ | ✅ |
+| `/api/planes/` | ✅ | ✅ | ✅ | ✅ |
+| `/api/ordenes/` | ✅ | ✅ | ✅ | ✅ |
+
+### Acciones Especiales
+
+**Empresas:**
+- `GET /api/empresas/activas/` - Solo empresas activas
+- `GET /api/empresas/{id}/estadisticas/` - Métricas de empresa
+
+**Equipos:**
+- `GET /api/equipos/operativos/` - Solo operativos
+- `GET /api/equipos/{id}/estadisticas/` - Métricas de equipo
+
+**Técnicos:**
+- `GET /api/tecnicos/disponibles/` - Técnicos activos
+- `GET /api/tecnicos/por-especialidad/?especialidad=mecanico`
+
+**Planes:**
+- `GET /api/planes/activos/` - Planes vigentes
+- `GET /api/planes/proximos_vencimientos/` - Próximos 7 días
+
+**Órdenes:**
+- `GET /api/ordenes/pendientes/` - Órdenes sin completar
+- `POST /api/ordenes/{id}/iniciar/` - Iniciar trabajo
+- `POST /api/ordenes/{id}/completar/` - Finalizar trabajo
+- `POST /api/ordenes/{id}/pausar/` - Pausar trabajo
+- `POST /api/ordenes/{id}/cancelar/` - Cancelar trabajo
+
+## 🔐 Autenticación
+
+**Lectura:** Pública (sin login)
+```bash
+curl http://127.0.0.1:8000/api/empresas/
+```
+
+**Escritura:** Requiere login
+```bash
+curl -X POST http://127.0.0.1:8000/api/empresas/ \
+  -H "Content-Type: application/json" \
+  -d '{...}' \
+  -u admin:admin
+```
+
+## 🛠️ Tecnologías Usadas
+
+- **Django 6.0** - Framework web Python
+- **Django REST Framework 3.16.1** - API REST
+- **SQLite** - Base de datos (demostración)
+- **Python 3.8+** - Lenguaje
 
 ## 📁 Estructura del Proyecto
 
 ```
 Mantenci-n-Industrial/
-├── config/                      # Configuración principal
-│   ├── settings.py             # Configuraciones de Django
-│   ├── urls.py                 # URLs principales
-│   ├── wsgi.py                 # Servidor WSGI
-│   └── asgi.py                 # Servidor ASGI
-├── mantenimiento/              # Aplicación principal
-│   ├── models.py               # Modelos de datos
-│   ├── views.py                # ViewSets y vistas
-│   ├── serializers.py          # Serializadores de datos
-│   ├── urls.py                 # URLs de la app
-│   ├── admin.py                # Configuración del admin
-│   └── migrations/             # Migraciones de BD
-├── manage.py                   # Script de gestión
-├── db.sqlite3                  # Base de datos
-├── requirements.txt            # Dependencias
-├── README.md                   # Este archivo
-├── API_DOCUMENTATION.md        # Documentación API
-└── venv/                       # Ambiente virtual
+├── config/
+│   ├── settings.py          ← Configuraciones
+│   ├── urls.py              ← Rutas principales
+│   └── wsgi.py
+├── mantenimiento/
+│   ├── models.py            ← 5 modelos
+│   ├── views.py             ← 5 ViewSets
+│   ├── serializers.py       ← Serializadores
+│   ├── admin.py             ← Panel admin
+│   └── urls.py
+├── db.sqlite3               ← Base de datos
+├── manage.py                ← Gestor Django
+└── requirements.txt         ← Dependencias
 ```
 
-## 🔌 API Documentation
+## 💾 Datos de Prueba
 
-Ver [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) para:
-- Endpoints completos
-- Ejemplos de requests
-- Códigos de respuesta
-- Filtros y búsqueda
-- Validaciones
+### Acceso por Defecto
+- **Usuario:** admin
+- **Contraseña:** admin
 
-### Endpoints Rápidos
-
-**Empresas:**
-- `GET /api/empresas/` - Listar
-- `POST /api/empresas/` - Crear
-- `GET /api/empresas/{id}/` - Detalles
-- `GET /api/empresas/{id}/estadisticas/` - Estadísticas
-- `GET /api/empresas/activas/` - Solo activas
-
-**Equipos:**
-- `GET /api/equipos/` - Listar
-- `GET /api/equipos/operativos/` - Solo operativos
-- `GET /api/equipos/{id}/estadisticas/` - Estadísticas
-
-**Técnicos:**
-- `GET /api/tecnicos/` - Listar
-- `GET /api/tecnicos/disponibles/` - Solo activos
-- `GET /api/tecnicos/por-especialidad/?especialidad=mecanico`
-
-**Planes:**
-- `GET /api/planes/` - Listar
-- `GET /api/planes/activos/` - Solo activos
-- `GET /api/planes/proximos_vencimientos/` - Próximas 7 días
-
-**Órdenes:**
-- `GET /api/ordenes/` - Listar
-- `POST /api/ordenes/{id}/iniciar/` - Iniciar orden
-- `POST /api/ordenes/{id}/completar/` - Completar orden
-- `GET /api/ordenes/pendientes/` - Órdenes pendientes
-- `GET /api/ordenes/urgentes/` - Órdenes urgentes
-
-## 🔐 Autenticación y Permisos
-
-### Sistema de Permisos
-
-**IsAuthenticatedOrReadOnly:**
-- ✅ Usuarios anónimos: Pueden **leer** (GET)
-- ✅ Usuarios autenticados: Pueden **crear, editar, eliminar**
-
-### Login
-
-**Por sesión (Panel Admin):**
-```bash
-curl -X POST http://127.0.0.1:8000/api-auth/login/ \
-  -d "username=admin&password=password"
-```
-
-**Con curl y autenticación básica:**
-```bash
-curl -X GET http://127.0.0.1:8000/api/empresas/ \
-  -u admin:password
-```
-
-**Obtener token de sesión:**
-```bash
-curl -X POST http://127.0.0.1:8000/api-auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"password"}'
-```
-
-## 🛠️ Desarrollo
-
-### Comandos Útiles
-
-**Ejecutar servidor con más detalles:**
-```bash
-python manage.py runserver --verbosity 2
-```
-
-**Acceder a shell de Django:**
+### Crear Datos de Demo
 ```bash
 python manage.py shell
 ```
 
-En el shell:
-```python
-from mantenimiento.models import Empresa, Equipo
-empresa = Empresa.objects.create(
-    nombre="Mi Empresa",
-    rut="12345678-9",
-    email="contacto@empresa.cl"
-)
-print(f"Empresa creada: {empresa}")
-```
-
-**Crear migraciones:**
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
-
-**Ver migraciones pendientes:**
-```bash
-python manage.py showmigrations
-```
-
-**Revertir migraciones:**
-```bash
-python manage.py migrate mantenimiento 0001
-```
-
-**Crear app nueva:**
-```bash
-python manage.py startapp nombre_app
-```
-
-**Recolectar archivos estáticos:**
-```bash
-python manage.py collectstatic
-```
-
-### Ejecutar Pruebas
-
-```bash
-python manage.py test
-```
-
-### Generar Datos de Prueba
-
-Crear archivo `populate_db.py`:
+Luego en el shell:
 ```python
 from mantenimiento.models import Empresa, Equipo, Tecnico
 
 # Crear empresa
 empresa = Empresa.objects.create(
-    nombre="Empresa Test",
-    rut="99.999.999-9",
-    email="test@empresa.cl",
+    nombre="Demo Corp",
+    rut="11.111.111-1",
+    email="demo@corp.cl",
     ciudad="Santiago"
 )
 
 # Crear equipo
 equipo = Equipo.objects.create(
     empresa=empresa,
-    nombre="Bomba Centrífuga",
-    codigo="EQ-001",
-    tipo="Bomba",
-    marca="Grundfos",
-    modelo="NK 100-250",
-    estado="operativo"
+    nombre="Motor Eléctrico",
+    codigo="DEMO-001",
+    tipo="Motor",
+    critical=False
 )
 
 # Crear técnico
 tecnico = Tecnico.objects.create(
-    nombre="Juan",
+    nombre="Pedro",
     apellido="Pérez",
-    rut="18.123.456-7",
-    email="juan@tecnico.cl",
-    telefono="+56912345678",
-    especialidad="mecanico",
+    rut="17.000.000-0",
+    email="pedro@demo.cl",
+    telefono="+56900000000",
+    especialidad="electrico",
     experiencia_anos=5
 )
 
-print("✅ Datos de prueba creados exitosamente")
+print("✅ Datos de demo creados")
 ```
 
-Ejecutar:
-```bash
-python manage.py shell < populate_db.py
-```
+## 📖 Documentación Adicional
 
-## 📊 Modelos de Datos
+- `QUICKSTART.md` - Inicio rápido
+- `API_DOCUMENTATION.md` - Referencia completa de API
+- `API_EXAMPLES.md` - +50 ejemplos prácticos
+- `PROJECT_SUMMARY.md` - Resumen del proyecto
 
-### Empresa
-- nombre, rut, email, teléfono
-- dirección, ciudad, contacto
-- estado (activa/inactiva)
+## 🎬 Casos de Uso
 
-### Equipo
-- nombre, código, tipo
-- marca, modelo, serie
-- ubicación, estado
-- fechas de adquisición, instalación, último mantenimiento
+### Caso 1: Crear y Completar una Orden
+1. Crear empresa
+2. Crear equipo en esa empresa
+3. Crear técnico
+4. Crear plan de mantenimiento
+5. Crear orden
+6. Cambiar estado: Programada → En Progreso → Completada
 
-### Técnico
-- nombre, apellido, rut, email
-- especialidad (mecánico, eléctrico, etc.)
-- años de experiencia
-- certificaciones
+### Caso 2: Ver Estadísticas
+1. Acceder a `/api/empresas/1/estadisticas/`
+2. Ver métricas: equipos, órdenes, costos, horas
+3. Acceder a `/api/equipos/1/estadisticas/`
+4. Analizar historial de mantenimiento
 
-### Plan
-- nombre, descripción
-- tipo (preventivo, correctivo, predictivo)
-- frecuencia (diaria, semanal, mensual, etc.)
-- duración estimada, costo
-- tareas, herramientas, repuestos
-
-### Orden
-- número automático (ORD-AÑO-XXXXX)
-- equipo, empresa, plan
-- técnico asignado
-- estado, prioridad
-- fechas programada, inicio, término
-- horas trabajadas, costo real
-
-## 🐛 Troubleshooting
-
-### Error: "ModuleNotFoundError: No module named 'django'"
-
-**Solución:**
-```bash
-# Asegurar que el venv está activado
-# Windows:
-.\venv\Scripts\Activate.ps1
-# Linux/Mac:
-source venv/bin/activate
-
-# Reinstalar dependencias
-pip install -r requirements.txt
-```
-
-### Error: "CommandError: System check identified some issues"
-
-```bash
-python manage.py check
-```
-
-Esto mostrará los problemas específicos.
-
-### Error: "Could not open database"
-
-Eliminar `db.sqlite3` y recrear:
-```bash
-rm db.sqlite3
-python manage.py migrate
-python manage.py createsuperuser
-```
-
-### Puerto 8000 ya en uso
-
-```bash
-python manage.py runserver 8001
-```
-
-## 📝 Notas
-
-- La base de datos SQLite es solo para desarrollo
-- Para producción usar PostgreSQL o MySQL
-- Cambiar `DEBUG = False` en producción
-- Generar `SECRET_KEY` segura en producción
-- Configurar `ALLOWED_HOSTS` en producción
-
-## 📄 Licencia
-
-Este proyecto está bajo licencia MIT.
-
-## 👤 Autor
-
-Dylan Merino (Dylan-af)
-- Email: dylan.merino@incapmail.cl
-- GitHub: https://github.com/Dylan-af
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Por favor:
-1. Fork el proyecto
-2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abrir un Pull Request
-
-## 📞 Soporte
-
-Para reportar problemas o sugerencias, crear un issue en:
-https://github.com/Dylan-af/Mantenci-n-Industrial/issues
-
----
-
-**Última actualización:** Diciembre 10, 2025
+### Caso 3: Filtrar y Buscar
+1. Buscar equipos: `?search=codigo`
+2. Filtrar críticos: Crear equipos con `critical=true`
+3. Ordenar por fecha: `?ordering=-fecha_creacion`
