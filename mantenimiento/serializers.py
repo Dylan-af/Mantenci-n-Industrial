@@ -47,7 +47,7 @@ class EquipoSerializer(serializers.ModelSerializer):
             'id', 'empresa', 'empresa_nombre', 'nombre', 'codigo', 'descripcion',
             'tipo', 'marca', 'modelo', 'serie', 'ubicacion', 'estado',
             'estado_display', 'fecha_adquisicion', 'fecha_instalacion',
-            'fecha_ultimo_mantenimiento', 'activo', 'fecha_creacion',
+            'fecha_ultimo_mantenimiento', 'critical', 'activo', 'fecha_creacion',
             'fecha_actualizacion'
         ]
         read_only_fields = ['id', 'fecha_creacion', 'fecha_actualizacion']
@@ -80,7 +80,7 @@ class TecnicoSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'nombre', 'apellido', 'nombre_completo', 'rut', 'email',
             'telefono', 'especialidad', 'especialidad_display', 'experiencia_anos',
-            'certificaciones', 'activo', 'fecha_contratacion', 'fecha_creacion',
+            'certificaciones', 'user', 'activo', 'fecha_contratacion', 'fecha_creacion',
             'fecha_actualizacion'
         ]
         read_only_fields = ['id', 'fecha_creacion', 'fecha_actualizacion', 'nombre_completo']
@@ -111,7 +111,7 @@ class PlanSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'empresa', 'empresa_nombre', 'equipo', 'equipo_nombre',
             'nombre', 'descripcion', 'tipo', 'tipo_display', 'frecuencia',
-            'frecuencia_display', 'duracion_estimada_horas', 'tareas',
+            'frecuencia_display', 'frequency_days', 'duracion_estimada_horas', 'tareas',
             'herramientas_requeridas', 'repuestos_comunes', 'costo_estimado',
             'activo', 'fecha_inicio', 'fecha_proximo_mantenimiento',
             'fecha_creacion', 'fecha_actualizacion'
