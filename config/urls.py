@@ -15,8 +15,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(['GET'])
+def api_root(request):
+    """Root endpoint de la API"""
+    return Response({
+        'message': 'Mantención Industrial API',
+        'version': '1.0.0',
+        'endpoints': {
+            'empresas': request.build_absolute_uri('/api/empresas/'),
+            'equipos': request.build_absolute_uri('/api/equipos/'),
+            'tecnicos': request.build_absolute_uri('/api/tecnicos/'),
+            'planes': request.build_absolute_uri('/api/planes/'),
+            'ordenes': request.build_absolute_uri('/api/ordenes/'),
+            'admin': request.build_absolute_uri('/admin/'),
+        }
+    })
 
 urlpatterns = [
+    path('', api_root, name='api-root'),
     path('admin/', admin.site.urls),
+    path('api/', include('mantenimiento.urls')),
+    path('api-auth/', include('rest_framework.urls')),
 ]
