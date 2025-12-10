@@ -24,7 +24,73 @@ python manage.py runserver
   - Usuario: `admin`
   - Contraseña: `admin`
 
-## 📦 Qué Se Incluye
+## 📦 Requisitos
+
+- **Python**: 3.8+
+- **pip**: Gestor de paquetes de Python
+- **Git**: Control de versiones (opcional)
+
+### Paquetes Principales
+
+- Django 6.0
+- Django REST Framework 3.16.1
+- djangorestframework-simplejwt 5.5.1
+- coreapi 2.3.3
+
+## 🚀 Instalación
+
+### 1. Clonar el Repositorio
+
+```bash
+git clone https://github.com/Dylan-af/Mantenci-n-Industrial.git
+cd Mantenci-n-Industrial
+```
+
+### 2. Crear Ambiente Virtual
+
+**Windows (PowerShell):**
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+```
+
+**Windows (CMD):**
+```cmd
+python -m venv venv
+venv\Scripts\activate.bat
+```
+
+**Linux/Mac:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Instalar Dependencias
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Aplicar Migraciones
+
+```bash
+python manage.py migrate
+```
+
+### 5. Crear Superusuario
+
+```bash
+python manage.py createsuperuser
+```
+
+### 6. Ejecutar Servidor de Desarrollo
+
+```bash
+python manage.py runserver
+```
+
+La API estará disponible en: `http://127.0.0.1:8000/`
 
 ### 🏢 Módulo de Empresas
 Gestiona clientes/empresas con toda su información:
@@ -259,19 +325,63 @@ curl -X POST http://127.0.0.1:8000/api/ordenes/1/completar/ \
 - `POST /api/ordenes/{id}/pausar/` - Pausar trabajo
 - `POST /api/ordenes/{id}/cancelar/` - Cancelar trabajo
 
-## 🔐 Autenticación
+## 🔐 Autenticación JWT
 
-**Lectura:** Pública (sin login)
+La API utiliza **JWT (JSON Web Tokens)** para autenticación segura. Ventajas:
+- ✅ Tokens expirables
+- ✅ Refresh tokens para renovación
+- ✅ Sin almacenar sesiones en servidor
+- ✅ Escalable para microservicios
+
+### Obtener Token JWT
+
 ```bash
-curl http://127.0.0.1:8000/api/empresas/
+curl -X POST http://127.0.0.1:8000/api/token/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "admin"
+  }'
 ```
 
-**Escritura:** Requiere login
+**Respuesta:**
+```json
+{
+  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+### Usar el Token de Acceso
+
 ```bash
-curl -X POST http://127.0.0.1:8000/api/empresas/ \
+curl -X GET http://127.0.0.1:8000/api/empresas/ \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+### Renovar Token Expirado
+
+El `access` token expira en 1 hora. Usa el `refresh` token para renovar:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/token/refresh/ \
   -H "Content-Type: application/json" \
-  -d '{...}' \
-  -u admin:admin
+  -d '{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }'
+```
+
+### Configuración JWT
+
+En `config/settings.py`:
+```python
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'ALGORITHM': 'HS256',
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 ```
 
 ## 🛠️ Tecnologías Usadas
